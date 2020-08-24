@@ -3,9 +3,13 @@
 
 
 # Credit to following people
+I honestly can say I would not of been able to get done this app without the help and support of the following people.
+
 - vadian https://stackoverflow.com/users/5044042/vadian
 - Joakim Danielson https://stackoverflow.com/users/9223839/joakim-danielson
 - New Dev https://stackoverflow.com/users/968155/new-dev
+
+and all the people that use StackOverflow.com
 
 # Plugins
 - Remote Image https://github.com/crelies/RemoteImage
