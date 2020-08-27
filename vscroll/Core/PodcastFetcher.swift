@@ -36,9 +36,6 @@ class PodApi {
    // Func to print data
    func getPodcast(podurl:String,completion: @escaping ([PodProgram]) -> ()) {
      
-    
-    
-       
     let podurl = podurl
     
         guard let url = URL(string: "https://api.drn1.com.au/api-access/programs/\(podurl)") else { return }
@@ -50,14 +47,13 @@ class PodApi {
                // longer be decoding an array
               
             let podcast = try! JSONDecoder().decode(PodPost.self, from: data!)
-                //print(data!)
+               // print(data!)
                // let episode = podcast.programs
                DispatchQueue.main.async{
                    // The array is stored under programs now
-                
+                print(podcast)
                 completion(podcast.programs.first!.episode)
                }
-               
            }
     .resume()
    }

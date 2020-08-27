@@ -1,5 +1,5 @@
 import SwiftUI
-import Foundation
+//import Foundation
 import AVFoundation
 import MediaPlayer
 import AVKit
@@ -17,41 +17,42 @@ static var mediatype = ""
 static var artist = ""
 static var song = ""
 static var cover = ""
+static var uuid = UIDevice.current.identifierForVendor?.uuidString
 
 
 var player: AVPlayer?
 let playerViewController = AVPlayerViewController()
 
-    
     func gettype(completion: @escaping (String) -> Void){
-        
-          completion(MusicPlayer.mediatype)
-     
-    }
-    
-    func getPodCastPlayerNP(completion: @escaping (NowPlayingData) -> ()) {
-     // Timer.scheduledTimer(withTimeInterval: 15, repeats: true) { (timer) in
-        let songdata = "{\"id\": \"1\",\"song\": \"\(MusicPlayer.song)\",\"artist\": \"\(MusicPlayer.artist)\", \"cover\": \"\(MusicPlayer.cover)\"}"
-        let data: Data? = songdata.data(using: .utf8)
-        
-        let podcast = try! JSONDecoder().decode(NowPlayingData.self, from: data!)
+          
+            completion(MusicPlayer.mediatype)
+       
+      }
       
-                       //print(data!)
-                      // let episode = podcast.programs
-                      DispatchQueue.main.async{
-                          // The array is stored under programs now
-                        //print(podcast)
-                        completion(podcast)
-                      }
-       // }
-    }
+      func getPodCastPlayerNP(completion: @escaping (NowPlayingData) -> ()) {
+       // Timer.scheduledTimer(withTimeInterval: 15, repeats: true) { (timer) in
+          let songdata = "{\"id\": \"1\",\"song\": \"\(MusicPlayer.song)\",\"artist\": \"\(MusicPlayer.artist)\", \"cover\": \"\(MusicPlayer.cover)\"}"
+          let data: Foundation.Data = songdata.data(using: .utf8)!
+          
+          let podcast = try! JSONDecoder().decode(NowPlayingData.self, from: data)
+        
+                         //print(data!)
+                        // let episode = podcast.programs
+                        DispatchQueue.main.async{
+                            // The array is stored under programs now
+                          //print(podcast)
+                          completion(podcast)
+                        }
+         // }
+      }
 
     func startBackgroundMusic(url: String, type:String) {
      
         MusicPlayer.mediatype = String(type)
         
         //let urlString = "http://stream.radiomedia.com.au:8003/stream"
-        let urlString = url
+        let urlString = url+"?uuid="+MusicPlayer.uuid!
+        print(urlString)
         guard let url = URL.init(string: urlString) else { return }
 
         let playerItem = AVPlayerItem.init(url: url)

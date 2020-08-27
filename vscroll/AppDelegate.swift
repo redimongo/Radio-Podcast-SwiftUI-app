@@ -14,12 +14,12 @@ import AVKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
        
-        MusicPlayer.shared.startBackgroundMusic(url:"http://stream.radiomedia.com.au:8003/stream", type: "radio")
+        MusicPlayer.shared.startBackgroundMusic(url:"https://api.drn1.com.au:9000/station/DRN1", type: "radio")
         setupNotifications()
+      
         return true
     }
 
@@ -68,7 +68,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
            }
 
        }
-
 
 }
 

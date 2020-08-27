@@ -5,14 +5,28 @@
 //  Created by Russell Harrower on 17/8/20.
 //  Copyright © 2020 Russell Harrower. All rights reserved.
 //
-
 import SwiftUI
 import AVKit
-import RemoteImage
+import KingfisherSwiftUI
+import CoreLocation
 
 struct ContentView: View {
-    
     @State var isNavigationBarHidden: Bool = true
+    @ObservedObject var location = LocationManager()
+
+    
+    var lat: String{
+        return "\(location.lastKnownLocation?.coordinate.latitude ?? 0.0)"
+    }
+    
+    var lon: String{
+        return "\(location.lastKnownLocation?.coordinate.longitude ?? 0.0)"
+    }
+    
+    init() {
+        self.location.startUpdating()
+    }
+    
     
     
     @State var showingDetail = false
@@ -22,9 +36,9 @@ struct ContentView: View {
 
    var body: some View {
         NavigationView {
-           
+        GeometryReader { geo in
             Group {
-            if posts.isEmpty {
+                if self.posts.isEmpty {
                 Text("Loading")
                 //this must be empty
                 //.navigationBarHidden(true)
@@ -33,7 +47,9 @@ struct ContentView: View {
             ScrollView {
                 VStack(alignment: .leading){
                     MediaPlayerView()
-                }.frame(height: 250)
+                    .frame(width:geo.size.width, height:270)
+                    
+               // }.frame(width:geo.size.width, height:250)
                     .onTapGesture {
                      self.showingDetail.toggle()
                     }
@@ -41,9 +57,9 @@ struct ContentView: View {
                             MediaPlayerView()
                                 
                         }
-                
-                VStack(alignment: .leading){
-                    
+               // Divider()
+              //  VStack(alignment: .trailing){
+                Spacer(minLength: 2)
                     //STATIONS
                     Text("Our Stations")
                     .lineSpacing(30)
@@ -51,26 +67,19 @@ struct ContentView: View {
                     .font(.system(size: 30, weight: .heavy, design: .default))
                     ScrollView(.horizontal, showsIndicators: false) {
                                         HStack(alignment: .bottom, spacing: 10) {
-                                            ForEach(stations) { station in
+                                            ForEach(self.stations) { station in
                                                 //return
                                                Button(action: {
+                                                AdStichrApi.station = station.name
                                                 MusicPlayer.shared.startBackgroundMusic(url:station.listenlive, type: "radio")
                                                 self.showingDetail.toggle()
                                                }) {
-                                                RemoteImage(type: .url(URL(string:station.imageurl)!), errorView: { error in
-                                                    Text(error.localizedDescription)
-                                                }, imageView: { image in
-                                                    image
+                                                
+                                                KFImage(URL(string: station.imageurl)!)
                                                     .resizable()
                                                     .renderingMode(.original)
-                    /*                                .clipShape(Circle())
-                                                    .shadow(radius: 10)
-                                                    .overlay(Circle().stroke(Color.red, lineWidth: 5))*/
-                                                    .aspectRatio(contentMode: .fit)
-                                                    .frame(width:150, height:150)
-                                                }, loadingView: {
-                                                    Text("Loading ...")
-                                                })
+                                                    .frame(width:geo.size.width / 2.5, height:geo.size.width / 2.5)
+                                              
                                                 .sheet(isPresented: self.$showingDetail) {
                                                     MediaPlayerView()
                                                         
@@ -78,8 +87,8 @@ struct ContentView: View {
                                             }
                                         }
                                             
-                                        }.frame(height: 150)
-                                    }.frame(height: 150)
+                                        }.frame(height: geo.size.width / 2.5)
+                    }.frame(height: geo.size.width / 2.5)
                     
                     Divider()
                     //PODCAST
@@ -89,30 +98,21 @@ struct ContentView: View {
                     .font(.system(size: 20, weight: .heavy, design: .default))
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(alignment: .bottom, spacing: 10) {
-                            ForEach(posts) { post in
+                            ForEach(self.posts) { post in
                                 //return
                                 NavigationLink(destination: Podcasts(post: post)){
-                                RemoteImage(type: .url(URL(string:post.icon)!), errorView: { error in
-                                    Text(error.localizedDescription)
-                                }, imageView: { image in
-                                    image
-                                    .resizable()
-                                    .renderingMode(.original)
-    /*                                .clipShape(Circle())
-                                    .shadow(radius: 10)
-                                    .overlay(Circle().stroke(Color.red, lineWidth: 5))*/
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width:100, height:100)
-                                }, loadingView: {
-                                    Text("Loading ...")
-                                })
+                                    KFImage(URL(string: post.icon))
+                                        .resizable()
+                                        .renderingMode(.original)
+                                        .frame(width:geo.size.width / 3, height:geo.size.width / 3)
+                                    
                                 }
                             }
                             
                             
 
-                        }.frame(height: 100)
-                    }.frame(height: 100)
+                        }.frame(height: geo.size.width / 3)
+                    }.frame(height: geo.size.width / 3)
                     
                     
                     
@@ -125,34 +125,25 @@ struct ContentView: View {
                                     .font(.system(size: 20, weight: .heavy, design: .default))
                                     ScrollView(.horizontal, showsIndicators: false) {
                                         HStack(alignment: .bottom, spacing: 10) {
-                                            ForEach(lifeshows) { post in
+                                            ForEach(self.lifeshows) { post in
                                                 //return
                                                 NavigationLink(destination: Podcasts(post: post)){
-                                                RemoteImage(type: .url(URL(string:post.icon)!), errorView: { error in
-                                                    Text(error.localizedDescription)
-                                                }, imageView: { image in
-                                                    image
+                                               
+                                                 KFImage(URL(string: post.icon)!)
                                                     .resizable()
                                                     .renderingMode(.original)
-                    /*                                .clipShape(Circle())
-                                                    .shadow(radius: 10)
-                                                    .overlay(Circle().stroke(Color.red, lineWidth: 5))*/
-                                                    .aspectRatio(contentMode: .fit)
-                                                    .frame(width:100, height:100)
-                                                }, loadingView: {
-                                                    Text("Loading ...")
-                                                })
+                                                    .frame(width:geo.size.width / 4, height:geo.size.width / 4)
                                                 }
                                             }
                                             
                                             
 
-                                        }.frame(height: 100)
-                                    }.frame(height: 100)
+                                        }.frame(height: geo.size.width / 4)
+                                    }.frame(height: geo.size.width / 4)
                     
                 }
            
-                
+            //   CityListScene()
                 
             }
             }
@@ -160,11 +151,11 @@ struct ContentView: View {
                            .navigationBarTitle("")
                            //.navigationBarBackButtonHidden(true)
                            .navigationBarHidden(true)
-                          
+            }
         }
          .navigationViewStyle(StackNavigationViewStyle())
         .onAppear {
-            self.navigationViewStyle(StackNavigationViewStyle())
+         //   self.navigationViewStyle(StackNavigationViewStyle())
             
           
             Api().getShows(station:"1Life"){ (posts) in
@@ -192,4 +183,3 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
-

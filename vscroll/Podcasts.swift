@@ -13,19 +13,29 @@ struct Podcasts: View {
      let post: Program
     
     
+    @State var showingDetail = false
     @State var podcast: [PodProgram] = []
     
     var body: some View {
       
      
             List(podcast) {podcast in
-                 Button(action: {
+                /* Button(action: {
                     MusicPlayer.shared.startBackgroundMusic(url:"https://\(podcast.enclosureurl)", type: "podcast")
                     MusicPlayer.shared.getArtBoard(artist: self.post.title, song: podcast.title, cover:self.post.icon)
                    
-                   }) {
+                   }) {*/
                         Text(podcast.title)
-                }
+                                .onTapGesture {
+                                       self.showingDetail.toggle()
+                                                    MusicPlayer.shared.startBackgroundMusic(url:"https://\(podcast.enclosureurl)", type: "podcast")
+                                                       MusicPlayer.shared.getArtBoard(artist: self.post.title, song: podcast.title, cover:self.post.icon)
+                                      }
+                                    .sheet(isPresented: self.$showingDetail) {
+                                        MediaPlayerView()
+                                                  
+                                    }
+              /*  }*/
                     
             }
             .onAppear{
