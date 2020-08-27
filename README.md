@@ -12,5 +12,5 @@ I honestly can say I would not of been able to get done this app without the hel
 and all the people that use StackOverflow.com
 
 # Plugins
-- Remote Image https://github.com/crelies/RemoteImage
+- Fingfisher & KingfisherUI https://github.com/onevcat/Kingfisher
 - ViewInspector https://github.com/nalexn/ViewInspector
